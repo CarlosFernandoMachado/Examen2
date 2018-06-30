@@ -11,7 +11,7 @@ import AccountsUIWrapper from './AccountsUIWrapper.js';
 class App extends Component {
   constructor(props) {
     super(props);
- 
+
     this.state = {
       hideCompleted: false,
     };
@@ -24,7 +24,9 @@ class App extends Component {
 
     Tasks.insert({
       text,
-      createdAt: new Date(), // current time
+      createdAt: new Date(),
+      owner: Meteor.userId(),           // _id of logged in user // current time
+      username: Meteor.user().username,  // username of logged in user
     });
 
     // Clear form
@@ -51,7 +53,7 @@ class App extends Component {
     return (
       <div className="container">
         <header>
-        <h1>Todo List ({this.props.incompleteCount})</h1>
+          <h1>Todo List ({this.props.incompleteCount})</h1>
 
           <label className="hide-completed">
             <input
@@ -64,14 +66,16 @@ class App extends Component {
           </label>
 
           <AccountsUIWrapper />
-
-          <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
-            <input
-              type="text"
-              ref="textInput"
-              placeholder="Type to add new tasks"
-            />
-          </form>
+          
+          {this.props.currentUser ?
+            <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
+              <input
+                type="text"
+                ref="textInput"
+                placeholder="Type to add new tasks"
+              />
+            </form> : ''
+          }
         </header>
 
         <ul>
@@ -86,5 +90,6 @@ export default withTracker(() => {
   return {
     tasks: Tasks.find({}, { sort: { createdAt: -1 } }).fetch(),
     incompleteCount: Tasks.find({ checked: { $ne: true } }).count(),
+    currentUser: Meteor.user(),
   };
 })(App);
