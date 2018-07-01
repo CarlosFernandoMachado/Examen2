@@ -57,7 +57,7 @@ class App extends Component {
     return (
       <div className="container">
         <header>
-          <h1>Publicaciones ({this.props.incompleteCount})</h1>
+          <h1>Muro ({this.props.incompleteCount})</h1>
 
           <label className="hide-completed">
             <input
@@ -76,7 +76,7 @@ class App extends Component {
               <input
                 type="text"
                 ref="textInput"
-                placeholder="Type to add new tasks"
+                placeholder="Di lo que piensas"
               />
             </form> : ''
           }
